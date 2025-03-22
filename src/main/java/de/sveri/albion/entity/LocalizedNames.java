@@ -1,5 +1,7 @@
 package de.sveri.albion.entity;
 
-public record LocalizedNames(String en, String de) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record LocalizedNames(@JsonProperty("EN-US") String en, @JsonProperty("DE-DE") String de) {
 
 }

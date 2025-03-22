@@ -21,7 +21,7 @@ public class MarketOrderRepository {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public void insertUser(List<MarketOrder> orders) {
+	public void insertOrders(List<MarketOrder> orders) {
 		String sql = "INSERT INTO market_orders (albion_id, item_id, quality_level, "
 				+ "enchantment_level, price, initial_amount, auction_type, expires, location, created_at) "
 				+ "VALUES (?, ?,?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id=id ";

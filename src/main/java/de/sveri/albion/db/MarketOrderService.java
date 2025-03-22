@@ -16,7 +16,7 @@ public class MarketOrderService {
 
 	@Transactional
 	public void insertOrders(List<MarketOrder> orders) {
-		repository.insertUser(orders);
+		repository.insertOrders(orders);
 	}
 
 }
