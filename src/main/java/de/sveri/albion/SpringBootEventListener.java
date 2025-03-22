@@ -1,6 +1,7 @@
 package de.sveri.albion;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -40,19 +41,29 @@ public class SpringBootEventListener {
 
 		nc = Nats.connect("nats://public:thenewalbiondata@nats.albion-online-data.com:34222");
 
-		Dispatcher dispatcher = nc.createDispatcher((msg) -> {
+		Dispatcher marketOrderDispatcher = nc.createDispatcher((msg) -> {
 			try {
 				List<MarketOrder> orders = mapper.readerForListOf(MarketOrder.class).readValue(msg.getData());
 				marketOrderService.insertOrders(orders);
-				log.info(orders.size());
+				log.trace(orders.size());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
+		marketOrderDispatcher.subscribe("marketorders.deduped.*");
 
-//		dispatcher.subscribe("markethistories.deduped.*");
-
-		dispatcher.subscribe("marketorders.deduped.*");
+		Dispatcher marketHistoryDispatcher = nc.createDispatcher((msg) -> {
+//			try {
+//				List<MarketOrder> orders = mapper.readerForListOf(MarketOrder.class).readValue(msg.getData());
+//				marketOrderService.insertOrders(orders);
+//				log.info(orders.size());
+			System.out.printf("%s on subject %s\n", new String(msg.getData(), StandardCharsets.UTF_8),
+					msg.getSubject());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+		});
+		marketHistoryDispatcher.subscribe("markethistories.deduped.*");
 
 	}
 

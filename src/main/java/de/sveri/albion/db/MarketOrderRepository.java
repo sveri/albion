@@ -37,7 +37,8 @@ public class MarketOrderRepository {
 				ps.setLong(5, order.unitPriceSilver());
 				ps.setLong(6, order.amount());
 				ps.setString(7, order.auctionType());
-				if (order.expires().startsWith("'3024") || order.expires().startsWith("'3025")) {
+				if (order.expires().startsWith("3024") || order.expires().startsWith("3025")
+						|| order.expires().startsWith("3023")) {
 					ps.setNull(8, Types.TIMESTAMP);
 				} else {
 					ps.setTimestamp(8, Timestamp.from(LocalDateTime.parse(order.expires()).toInstant(ZoneOffset.UTC)));
