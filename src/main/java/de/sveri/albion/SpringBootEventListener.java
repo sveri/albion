@@ -1,7 +1,6 @@
 package de.sveri.albion;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -11,11 +10,14 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
+import de.sveri.albion.db.MarketHistoryRepository;
 import de.sveri.albion.db.MarketOrderService;
+import de.sveri.albion.entity.MarketHistoryNats;
 import de.sveri.albion.entity.MarketOrder;
 import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
@@ -30,10 +32,13 @@ public class SpringBootEventListener {
 	private Connection nc;
 
 	ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-			.build();
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).build();
 
 	@Autowired
 	MarketOrderService marketOrderService;
+
+	@Autowired
+	MarketHistoryRepository marketHistoryRepository;
 
 	@EventListener
 	public void onApplicationEvent(ContextRefreshedEvent event) throws InterruptedException, IOException {
@@ -53,17 +58,17 @@ public class SpringBootEventListener {
 		marketOrderDispatcher.subscribe("marketorders.deduped.*");
 
 		Dispatcher marketHistoryDispatcher = nc.createDispatcher((msg) -> {
-//			try {
-//				List<MarketOrder> orders = mapper.readerForListOf(MarketOrder.class).readValue(msg.getData());
-//				marketOrderService.insertOrders(orders);
-//				log.info(orders.size());
-			System.out.printf("%s on subject %s\n", new String(msg.getData(), StandardCharsets.UTF_8),
-					msg.getSubject());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+//			System.out.printf("%s on subject %s\n", new String(msg.getData(), StandardCharsets.UTF_8),
+//					msg.getSubject());
+			try {
+				MarketHistoryNats marketHistory = mapper.readValue(msg.getData(), MarketHistoryNats.class);
+				marketHistoryRepository.insertMarketHistory(marketHistory);
+//				log.info(marketHistory.marketHistories().get(0).getHumanReadableTime());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
-		marketHistoryDispatcher.subscribe("markethistories.deduped.*");
+		marketHistoryDispatcher.subscribe("markethistories.deduped");
 
 	}
 

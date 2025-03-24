@@ -1,6 +1,13 @@
 package de.sveri.albion.entity;
 
-public record MarketHistory(long id, int itemAmount, int silverAmount, int locationid, int qualityLevel,
-		int enchantmentLevel, int unitPriceSilver, int amount, String auctionType, String expires) {
+import java.sql.Timestamp;
+
+import de.sveri.albion.db.MarketHistoryRepository;
+
+public record MarketHistory(int itemAmount, int silverAmount, long timestamp) {
+
+	public String getHumanReadableTime() {
+		return new Timestamp((timestamp / 10000) - MarketHistoryRepository.TICK_MINUITOR).toString();
+	}
 
 }
