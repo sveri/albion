@@ -1,2 +1,22 @@
 <input type="text" placeholder="Filter by city" #filter>
 <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button>
+
+
+<table>
+    <thead>
+        <th>uniqueName</th>
+        <th>Name</th>
+        <th>Name (DE)</th>
+        <th>Description</th>
+        <th>Beschreibung</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of filteredItemData; let i=index">
+            <td>{{item.uniqueName}}</td>
+            <td>{{item.localizedNames["EN-US"]}}</td>
+            <td>{{item.localizedNames["DE-DE"]}}</td>
+            <td>{{item.localizedDescriptions != null ? item.localizedDescriptions["EN-US"] : ""}}</td>
+            <td>{{item.localizedDescriptions != null ? item.localizedDescriptions["DE-DE"] : ""}}</td>
+        </tr>
+    </tbody>
+</table>
