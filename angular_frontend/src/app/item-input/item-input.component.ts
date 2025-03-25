@@ -23,18 +23,37 @@ export class ItemInputComponent implements OnInit {
 
   fetchData() {
     this.httpClient.get('/api/items').subscribe((data: any) => {
-      console.log(data);
       this.itemData = data;
     });
   }
 
   onFilterChange($event: Event) {
-    const newValue = ($event.target as HTMLInputElement).value;
-    if (!newValue || newValue.length < 3) {
-      return;
+    const searchValue = ($event.target as HTMLInputElement).value.trim();
+
+    const searchTerms = searchValue.split(/\s+/);
+    if (searchTerms.length > 1) {
+      if (searchTerms.some(term => term.length < 3)) {
+        return;
+      }
+      this.filteredItemData = this.filterMultipleTerms(searchTerms, this.itemData);
+    } else {
+      if (!searchValue || searchValue.length < 3) {
+        return;
+      }
+      this.filteredItemData = this.filterSingleTerm(searchValue, this.itemData);
     }
-    this.filteredItemData = this.itemData.filter(item =>
-      JSON.stringify(item).toLowerCase().includes(newValue.toLowerCase())
+  }
+
+  filterMultipleTerms(searchTerms: string[], items: ItemData[]) {
+    return items.filter(item =>
+      searchTerms.every(term =>
+        JSON.stringify(item).toLowerCase().includes(term.toLowerCase())
+      ));
+  }
+
+  filterSingleTerm(searchValue: string, items: ItemData[]) {
+    return items.filter(item =>
+      JSON.stringify(item).toLowerCase().includes(searchValue.toLowerCase())
     );
   }
 }
