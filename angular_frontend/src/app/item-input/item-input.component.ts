@@ -28,22 +28,13 @@ export class ItemInputComponent implements OnInit {
     });
   }
 
-  filterResults(text: string) {
-    this.filteredItemData = this.itemData.filter(item =>
-      JSON.stringify(item).toLowerCase().includes(text.toLowerCase())
-    );
-    console.log(this.filteredItemData);
-    // this.itemData.forEach((element: any) => {
-    //   console.log(element);
-    // });
-    if (!text) {
-      // this.filteredLocationList = this.housingLocationList;
+  onFilterChange($event: Event) {
+    const newValue = ($event.target as HTMLInputElement).value;
+    if (!newValue || newValue.length < 3) {
       return;
     }
-
-    // this.filteredLocationList = this.housingLocationList.filter(
-    //   housingLocation => housingLocation?.city.toLowerCase().includes(text.toLowerCase())
-    // );
+    this.filteredItemData = this.itemData.filter(item =>
+      JSON.stringify(item).toLowerCase().includes(newValue.toLowerCase())
+    );
   }
-
 }
