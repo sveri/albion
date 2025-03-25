@@ -55,20 +55,18 @@ public class SpringBootEventListener {
 				e.printStackTrace();
 			}
 		});
-		marketOrderDispatcher.subscribe("marketorders.deduped.*");
+//		marketOrderDispatcher.subscribe("marketorders.deduped.*");
 
 		Dispatcher marketHistoryDispatcher = nc.createDispatcher((msg) -> {
-//			System.out.printf("%s on subject %s\n", new String(msg.getData(), StandardCharsets.UTF_8),
-//					msg.getSubject());
 			try {
 				MarketHistoryNats marketHistory = mapper.readValue(msg.getData(), MarketHistoryNats.class);
 				marketHistoryRepository.insertMarketHistory(marketHistory);
-//				log.info(marketHistory.marketHistories().get(0).getHumanReadableTime());
+				log.info(marketHistory.marketHistories().get(0).getHumanReadableTime());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		marketHistoryDispatcher.subscribe("markethistories.deduped");
+//		marketHistoryDispatcher.subscribe("markethistories.deduped");
 
 	}
 
