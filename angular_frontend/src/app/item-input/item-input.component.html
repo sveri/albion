@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let item of filteredItemData; let i=index">
-            <td>{{item.uniqueName}}</td>
+            <td><a [routerLink]="['/crafting', item.uniqueName]">{{item.uniqueName}}</a></td>
             <td>{{item.localizedNames != null ? item.localizedNames["EN-US"] : ""}}</td>
             <td>{{item.localizedNames != null ? item.localizedNames["DE-DE"] : ""}}</td>
             <!-- <td>{{item.localizedDescriptions != null ? item.localizedDescriptions["EN-US"] : ""}}</td>

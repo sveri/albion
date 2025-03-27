@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-item-crafting',
@@ -6,6 +7,15 @@ import { Component } from '@angular/core';
   templateUrl: './item-crafting.component.html',
   styleUrl: './item-crafting.component.css'
 })
-export class ItemCraftingComponent {
+export class ItemCraftingComponent implements OnInit {
+
+  itemId: string | null = "";
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.itemId = this.route.snapshot.paramMap.get('item');
+    console.log(this.itemId);
+  }
 
 }

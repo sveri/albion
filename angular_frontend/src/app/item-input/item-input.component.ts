@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { ItemData } from './itemdata-types';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-item-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './item-input.component.html',
   styleUrl: './item-input.component.css'
 })
