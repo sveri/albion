@@ -16,7 +16,6 @@ export class ItemInputComponent implements OnInit {
   httpClient = inject(HttpClient);
 
   itemData: ItemData[] = [];
-  itemRecipes: any = [];
   filteredItemData: any = [];
 
   ngOnInit(): void {
@@ -26,9 +25,6 @@ export class ItemInputComponent implements OnInit {
   fetchData() {
     this.httpClient.get('/api/items').subscribe((data: any) => {
       this.itemData = data;
-    });
-    this.httpClient.get('/api/itemrecipes').subscribe((data: any) => {
-      this.itemRecipes = data;
     });
   }
 
