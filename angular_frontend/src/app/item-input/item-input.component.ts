@@ -15,6 +15,7 @@ export class ItemInputComponent implements OnInit {
   httpClient = inject(HttpClient);
 
   itemData: ItemData[] = [];
+  itemRecipes: any = [];
   filteredItemData: any = [];
 
   ngOnInit(): void {
@@ -25,6 +26,9 @@ export class ItemInputComponent implements OnInit {
     this.httpClient.get('/api/items').subscribe((data: any) => {
       this.itemData = data;
     });
+    this.httpClient.get('/api/itemrecipes').subscribe((data: any) => {
+      this.itemRecipes = data;
+    });
   }
 
   onFilterChange($event: Event) {
@@ -32,7 +36,7 @@ export class ItemInputComponent implements OnInit {
 
     const searchTerms = searchValue.split(/\s+/);
     if (searchTerms.length > 1) {
-      if (searchTerms.some(term => term.length < 3)) {
+      if (searchTerms.some(term => term.length < 2)) {
         return;
       }
       this.filteredItemData = this.filterMultipleTerms(searchTerms, this.itemData);
